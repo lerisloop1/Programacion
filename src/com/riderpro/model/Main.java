@@ -1,8 +1,7 @@
-
 public class Main {
     public static void main(String[] args) {
         Inventario inventario = new Inventario(1, 50, 10);
-        Cliente cliente = new Cliente(1, "Juan Perez", "Calle Falsa 123", "juan@gmail.com");
+        Cliente cliente = new Cliente(1, "Juan Perez", "Calle 57 #45-67 ", "juan@gmail.com");
         Motocicleta moto = new Motocicleta(1, "Yamaha", "MT-07", 2023, 35000.0);
         Venta venta = new Venta(1, cliente, moto, 35000.0);
         Usuario usuario = new Usuario(1, "admin", "1234", "Administrador");
