@@ -48,4 +48,16 @@ public class motocontroller {
         }
         return ResponseEntity.notFound().build();
     }
+
+    // Listar por marca
+    @GetMapping("/marca/{marca}")
+    public List<MotoDto> ListarPorMarca(@PathVariable String marca) {
+        return service.listarPorMarca(marca);
+    }
+
+    //listar por dispo
+    @GetMapping ("/disponibles/{disponibilidad}")
+   public  List<MotoDto> listarPorDisponibilidad(@PathVariable boolean disponibilidad) {
+        return service.listarPorDisponibilidad(disponibilidad);
+    }
 }
