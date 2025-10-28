@@ -2,6 +2,8 @@ package com.co.entrega1.entrega.entites;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,5 +28,5 @@ public class Compra {
     private Moto moto;
 
     @Column(name = "fecha_compra", nullable = false)
-    private LocalDateTime fechaCompra;
+    private LocalDate fechaCompra;
 }

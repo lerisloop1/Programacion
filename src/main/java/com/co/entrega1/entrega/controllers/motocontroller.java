@@ -1,5 +1,6 @@
 package com.co.entrega1.entrega.controllers;
 
+import com.co.entrega1.entrega.dto.MotoDto;
 import com.co.entrega1.entrega.entites.Moto;
 import com.co.entrega1.entrega.services.MotoServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +19,21 @@ public class motocontroller {
 
     //CREATE
     @PostMapping
-    public ResponseEntity<Moto> crearMoto(@RequestBody Moto moto) {
-        Moto nueva = service.crearMoto(moto);
+    public ResponseEntity<MotoDto> crearMoto(@RequestBody MotoDto moto) {
+        MotoDto nueva = service.crearMoto(moto);
         return ResponseEntity.ok(nueva);
     }
 
     //READ: listar todas motos
     @GetMapping
-    public ResponseEntity<List<Moto>> listarMotos() {
+    public ResponseEntity<List<MotoDto>> listarMotos() {
         return ResponseEntity.ok(service.listarMotos());
     }
 
     //READ: buscar por id
     @GetMapping("/{id}")
-    public ResponseEntity<Moto> buscarPorId(@PathVariable String id) {
-        Optional<Moto> persona = service.buscarPorId(id);
+    public ResponseEntity<MotoDto> buscarPorId(@PathVariable String id) {
+        Optional<MotoDto> persona = service.buscarPorId(id);
         return persona.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

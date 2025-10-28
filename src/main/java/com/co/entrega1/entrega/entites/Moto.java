@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
-
     @Entity
     @Table(name = "moto")
     @Data                   // genera getters, setters, toString, equals, hashCode
@@ -26,6 +24,8 @@ import lombok.NoArgsConstructor;
         private String modelo;
         @Column(name = "matricula", length = 100, nullable = false)
         private String matricula;
+        @Column(name = "disponibillidad",nullable = false, columnDefinition = "TINYINT(1)")
+        private boolean disponibilidad;
 
         @Column(name = "marca", length = 100, nullable = false)
         private String marca;
