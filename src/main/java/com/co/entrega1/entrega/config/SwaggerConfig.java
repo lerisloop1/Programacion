@@ -14,7 +14,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("API de Ventas de Motos")
                         .version("1.0.0")
-                        .description("Sistema de gestión de compras de motos Desarrollado por: Matheo Ruiz, Mariana Uribe y Darwin Rubio"));
+                        .description("Sistema de gestión de compras de motos Desarrollado por: Mateo Ruiz, Mariana Uribe y Darwin Rubio"));
     }
 }
 

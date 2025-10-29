@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class CompraServices {
-    @Autowired
+
     private final CompraRepository comprarepository;
-    @Autowired
+
     private final PersonasRepository personasrepository;
-    @Autowired
+
     private final MotoRepository motorepository;
-    @Autowired
+
     private final CompraMapper compraMapper;
 
     public CompraServices(CompraRepository comprarepository,
