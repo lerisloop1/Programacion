@@ -25,9 +25,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'com.mysql:mysql-connector-j:8.3.0'
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.8.6'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok:1.18.34'

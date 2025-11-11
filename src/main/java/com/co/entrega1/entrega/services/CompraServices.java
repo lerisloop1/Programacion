@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class CompraServices {
-    @Autowired
+
     private final CompraRepository comprarepository;
-    @Autowired
+
     private final PersonasRepository personasrepository;
-    @Autowired
+
     private final MotoRepository motorepository;
-    @Autowired
+
     private final CompraMapper compraMapper;
 
     public CompraServices(CompraRepository comprarepository,
@@ -42,7 +42,7 @@ public class CompraServices {
         Persona persona = personasrepository.findById(compraDto.getPersonaId())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
 
-        Moto moto = motorepository.findById(compraDto.getMotoMatricula())
+        Moto moto = motorepository.findByMatricula(compraDto.getMotoMatricula())
                 .orElseThrow(() -> new RuntimeException("Moto no encontrada"));
 
         // Verificamos si la moto ya fue vendida
