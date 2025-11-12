@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import riderfront.front.window.MainFrame;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 
@@ -22,6 +23,7 @@ public class FrontApplication implements CommandLineRunner {
 	public static void main(String[] args) {
 		System.setProperty("java.awt.headless", "false");
 		SpringApplication.run(FrontApplication.class, args);
+		FlatLightLaf.setup();
 	}
 
 
@@ -29,6 +31,7 @@ public class FrontApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println(">>> Iniciando interfaz Swing...");
 		SwingUtilities.invokeLater(() -> {
+
 			// Llamar a la inicialización de componentes (que usa los servicios inyectados)
 			mainFrame.initializeUI();
 			mainFrame.setVisible(true);

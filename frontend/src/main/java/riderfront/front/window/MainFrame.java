@@ -1,17 +1,15 @@
 package riderfront.front.window;
 
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
+import jakarta.annotation.PostConstruct;
 import riderfront.front.dtos.CompraDto;
 import riderfront.front.dtos.MotoDto;
 import riderfront.front.dtos.PersonaDto;
@@ -21,10 +19,9 @@ import riderfront.front.webservicespersona.MotoApiMoto;
 import riderfront.front.webservicespersona.PersonaApiPersona;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import com.formdev.flatlaf.FlatLightLaf;
 @Component
 public class MainFrame extends JFrame {
-
     @Autowired
     private PersonaApiPersona personaService;
     @Autowired
@@ -32,127 +29,157 @@ public class MainFrame extends JFrame {
     @Autowired
     private MotoApiMoto motoService;
 
-    private JComboBox<String> comboPersonas;
-    private JComboBox<String> comboMotos;
-    private JTextArea txtOutput;
-
-    private final Map<String, String> personaIdMap = new HashMap<>();
-    private final Map<String, String> motoMatriculaMap = new HashMap<>();
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel contentPanel = new JPanel(cardLayout);
+    private final JTextArea txtOutput = new JTextArea();
 
     public MainFrame() {
-        setTitle("🏍️ Sistema de Compras de Motos - Spring Boot + Swing");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 500);
+        FlatLightLaf.setup();
+        setTitle("Gestión de Compras de Motos");
+        setSize(900, 600);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout());
     }
 
     public void initializeUI() {
-        System.out.println(">>> Inicializando interfaz...");
+        // Barra lateral
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridLayout(5, 1, 5, 5));
+        sidePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // --- Panel superior: Selección de persona y moto ---
-        JPanel topPanel = new JPanel(new GridLayout(2, 2, 10, 10));
-        topPanel.setBorder(BorderFactory.createTitledBorder("Seleccionar Datos"));
+        JButton btnPersonas = new JButton(" Personas");
+        JButton btnMotos = new JButton("Motos");
+        JButton btnCompras = new JButton(" Compras");
+        JButton btnNuevaCompra = new JButton(" Registrar Compra");
+        JButton btnSalir = new JButton(" Salir");
 
-        List<PersonaDto> personas = personaService.getPersonas();
-        List<MotoDto> motos = motoService.getMotos();
+        sidePanel.add(btnPersonas);
+        sidePanel.add(btnMotos);
+        sidePanel.add(btnCompras);
+        sidePanel.add(btnNuevaCompra);
+        sidePanel.add(btnSalir);
 
-        DefaultComboBoxModel<String> modeloPersonas = new DefaultComboBoxModel<>();
-        for (PersonaDto p : personas) {
-            String label = p.getNombre() + " " + p.getApellido();
-            modeloPersonas.addElement(label);
-            personaIdMap.put(label, p.getId());
-        }
-        comboPersonas = new JComboBox<>(modeloPersonas);
+        // Panel de contenido dinámico
+        contentPanel.add(panelPersonas(), "personas");
+        contentPanel.add(panelMotos(), "motos");
+        contentPanel.add(panelCompras(), "compras");
 
-        DefaultComboBoxModel<String> modeloMotos = new DefaultComboBoxModel<>();
-        for (MotoDto m : motos) {
-            String label = m.getModelo() + " (" + m.getMatricula() + ")";
-            modeloMotos.addElement(label);
-            motoMatriculaMap.put(label, m.getMatricula());
-        }
-        comboMotos = new JComboBox<>(modeloMotos);
+        add(sidePanel, BorderLayout.WEST);
+        add(contentPanel, BorderLayout.CENTER);
 
-        topPanel.add(new JLabel("Persona:"));
-        topPanel.add(comboPersonas);
-        topPanel.add(new JLabel("Moto:"));
-        topPanel.add(comboMotos);
-
-        // --- Panel central: salida de texto ---
-        txtOutput = new JTextArea(10, 40);
-        txtOutput.setEditable(false);
-        txtOutput.setFont(new Font("Consolas", Font.PLAIN, 12));
-        JScrollPane scroll = new JScrollPane(txtOutput);
-        scroll.setBorder(BorderFactory.createTitledBorder(" Registro de operaciones"));
-
-        // --- Panel inferior: botones ---
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-
-        JButton btnRegistrar = new JButton(" Registrar Compra");
-        JButton btnPersonas = new JButton(" Ver Personas");
-        JButton btnMotos = new JButton("️ Ver Motos");
-        JButton btnCompras = new JButton(" Ver Compras");
-
-        bottomPanel.add(btnRegistrar);
-        bottomPanel.add(btnPersonas);
-        bottomPanel.add(btnMotos);
-        bottomPanel.add(btnCompras);
-
-        // --- Acciones ---
-        btnRegistrar.addActionListener(e -> registrarCompra());
-        btnPersonas.addActionListener(e -> mostrarPersonas());
-        btnMotos.addActionListener(e -> mostrarMotos());
-        btnCompras.addActionListener(e -> mostrarCompras());
-
-        // --- Ensamblar ---
-        add(topPanel, BorderLayout.NORTH);
-        add(scroll, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        // Listeners
+        btnPersonas.addActionListener(e -> showPanel("personas"));
+        btnMotos.addActionListener(e -> showPanel("motos"));
+        btnCompras.addActionListener(e -> showPanel("compras"));
+        btnNuevaCompra.addActionListener(e -> abrirDialogoCompra());
+        btnSalir.addActionListener(e -> System.exit(0));
 
         setVisible(true);
     }
 
-    private void registrarCompra() {
-        try {
-            String personaKey = (String) comboPersonas.getSelectedItem();
-            String motoKey = (String) comboMotos.getSelectedItem();
+    private void showPanel(String name) {
+        cardLayout.show(contentPanel, name);
+    }
 
-            if (personaKey == null || motoKey == null) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar persona y moto.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+    // === Panel Personas ===
+    private JPanel panelPersonas() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JTextArea txt = new JTextArea();
+        txt.setEditable(false);
+        JButton refresh = new JButton(" Actualizar");
+        refresh.addActionListener(e -> {
+            List<PersonaDto> personas = personaService.getPersonas();
+            txt.setText("=== LISTADO DE PERSONAS ===\n");
+            for (PersonaDto p : personas) {
+                txt.append(p.getId() + " - " + p.getNombre() + " " + p.getApellido() + "\n");
             }
+        });
+        panel.add(new JScrollPane(txt), BorderLayout.CENTER);
+        panel.add(refresh, BorderLayout.SOUTH);
+        return panel;
+    }
 
-            String personaId = personaIdMap.get(personaKey);
-            String motoMatricula = motoMatriculaMap.get(motoKey);
+    // === Panel Motos ===
+    private JPanel panelMotos() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JTextArea txt = new JTextArea();
+        txt.setEditable(false);
+        JButton refresh = new JButton(" Actualizar");
+        refresh.addActionListener(e -> {
+            List<MotoDto> motos = motoService.getMotos();
+            txt.setText("=== LISTADO DE MOTOS ===\n");
+            for (MotoDto m : motos) {
+                txt.append(m.getMatricula() + " - " + m.getModelo() + " (" + m.getMarca() + ")\n");
+            }
+        });
+        panel.add(new JScrollPane(txt), BorderLayout.CENTER);
+        panel.add(refresh, BorderLayout.SOUTH);
+        return panel;
+    }
 
-            CompraDto compra = new CompraDto();
-            compra.setPersonaId(personaId);
-            compra.setMotoMatricula(motoMatricula);
+    // === Panel Compras ===
+    private JPanel panelCompras() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JTextArea txt = new JTextArea();
+        txt.setEditable(false);
+        JButton refresh = new JButton(" Actualizar");
+        refresh.addActionListener(e -> {
+            List<CompraDto> compras = compraService.getCompras();
+            txt.setText("=== LISTADO DE COMPRAS ===\n");
+            for (CompraDto c : compras) {
+                txt.append("Compra #" + c.getId() + " | Persona: " + c.getPersonaId() + " | Moto: " + c.getMotoMatricula() + "\n");
+            }
+        });
+        panel.add(new JScrollPane(txt), BorderLayout.CENTER);
+        panel.add(refresh, BorderLayout.SOUTH);
+        return panel;
+    }
 
-            CompraDto resultado = compraService.comprarMoto(compra);
+    // === Diálogo para registrar una compra ===
+    private void abrirDialogoCompra() {
+        JDialog dialog = new JDialog(this, "Registrar Compra", true);
+        dialog.setSize(400, 300);
+        dialog.setLayout(new GridLayout(4, 2, 10, 10));
+        dialog.setLocationRelativeTo(this);
 
-            txtOutput.append("Compra registrada: Persona " + personaId + " compró " + motoMatricula + "\n");
-        } catch (Exception ex) {
-            txtOutput.append(" Error al registrar compra: " + ex.getMessage() + "\n");
-            ex.printStackTrace();
+        JComboBox<String> comboPersonas = new JComboBox<>();
+        for (PersonaDto p : personaService.getPersonas()) {
+            comboPersonas.addItem(p.getId() + " - " + p.getNombre());
         }
-    }
 
-    private void mostrarPersonas() {
-        txtOutput.append("\n===  LISTADO DE PERSONAS ===\n");
-        personaService.getPersonas().forEach(p ->
-                txtOutput.append(String.format("ID: %s | %s %s\n", p.getId(), p.getNombre(), p.getApellido())));
-    }
+        JComboBox<String> comboMotos = new JComboBox<>();
+        for (MotoDto m : motoService.getMotos()) {
+            comboMotos.addItem(m.getMatricula() + " - " + m.getModelo());
+        }
 
-    private void mostrarMotos() {
-        txtOutput.append("\n===  LISTADO DE MOTOS ===\n");
-        motoService.getMotos().forEach(m ->
-                txtOutput.append(String.format("%s | %s | Disponible: %s\n", m.getMatricula(), m.getModelo(), m.isDisponibilidad())));
-    }
+        JTextField txtId = new JTextField();
 
-    private void mostrarCompras() {
-        txtOutput.append("\n===  LISTADO DE COMPRAS ===\n");
-        compraService.getCompras().forEach(c ->
-                txtOutput.append(String.format("Compra #%s | Persona: %s | Moto: %s\n", c.getId(), c.getPersonaId(), c.getMotoMatricula())));
+        JButton btnGuardar = new JButton(" Registrar");
+        JButton btnCancelar = new JButton(" Cancelar");
+
+        dialog.add(new JLabel("Persona:"));
+        dialog.add(comboPersonas);
+        dialog.add(new JLabel("Moto:"));
+        dialog.add(comboMotos);
+        dialog.add(btnGuardar);
+        dialog.add(btnCancelar);
+
+        btnGuardar.addActionListener(e -> {
+            try {
+                CompraDto compra = new CompraDto();
+                compra.setPersonaId(comboPersonas.getSelectedItem().toString().split(" - ")[0]);
+                compra.setMotoMatricula(comboMotos.getSelectedItem().toString().split(" - ")[0]);
+
+                CompraDto response = compraService.comprarMoto(compra);
+                JOptionPane.showMessageDialog(dialog, "Compra registrada con éxito:\n" + response);
+                dialog.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error al registrar compra:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        btnCancelar.addActionListener(e -> dialog.dispose());
+        dialog.setVisible(true);
     }
 }
