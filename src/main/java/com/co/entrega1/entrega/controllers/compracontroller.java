@@ -19,11 +19,8 @@ public class compracontroller {
     }
 
     @PostMapping("/comprar")
-    public CompraDto comprarMoto(@RequestParam String personaId, @RequestParam String matriculaMoto) {
-        CompraDto compra =new CompraDto();
-        compra.setPersonaId(personaId);
-        compra.setMotoMatricula(matriculaMoto);
-        return compraservices.comprarMoto(compra);
+    public CompraDto comprarMoto(@RequestBody CompraDto compraDto) {
+        return compraservices.comprarMoto(compraDto);
     }
 
     @GetMapping("/fecha/{fecha}")

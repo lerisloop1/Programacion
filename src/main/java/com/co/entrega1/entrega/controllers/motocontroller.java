@@ -3,6 +3,11 @@ package com.co.entrega1.entrega.controllers;
 import com.co.entrega1.entrega.dto.MotoDto;
 import com.co.entrega1.entrega.entites.Moto;
 import com.co.entrega1.entrega.services.MotoServices;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +31,7 @@ public class motocontroller {
 
     //READ: listar todas motos
     @GetMapping
+
     public ResponseEntity<List<MotoDto>> listarMotos() {
         return ResponseEntity.ok(service.listarMotos());
     }

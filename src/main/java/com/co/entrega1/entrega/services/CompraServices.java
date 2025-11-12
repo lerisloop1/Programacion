@@ -8,11 +8,11 @@ import com.co.entrega1.entrega.mapper.CompraMapper;
 import com.co.entrega1.entrega.repositories.CompraRepository;
 import com.co.entrega1.entrega.repositories.MotoRepository;
 import com.co.entrega1.entrega.repositories.PersonasRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
