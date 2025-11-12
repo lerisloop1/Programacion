@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/entrega.main.iml" filepath="$PROJECT_DIR$/.idea/modules/entrega.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/entrega.test.iml" filepath="$PROJECT_DIR$/.idea/modules/entrega.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend/moto-proyecto.backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend/moto-proyecto.backend.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend/moto-proyecto.backend.test.iml" filepath="$PROJECT_DIR$/.idea/modules/backend/moto-proyecto.backend.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/frontend/moto-proyecto.frontend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/frontend/moto-proyecto.frontend.main.iml" />
     </modules>
   </component>
 </project>
