@@ -1,0 +1,4 @@
+rootProject.name = 'moto-proyecto'
+
+include 'backend'
+include 'frontend'
