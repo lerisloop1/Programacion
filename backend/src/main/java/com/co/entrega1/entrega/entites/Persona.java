@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Persona {
 
     @Id
-    @Column(name = "id", length = 50, nullable = false)
+    @Column(name = "id", length = 50, nullable = false ,unique = true)
     private String id;
 
     @Column(name = "nombre", length = 100, nullable = false)

@@ -49,7 +49,7 @@ public class MainFrame extends JFrame {
         sidePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JButton btnPersonas = new JButton(" Personas");
-        JButton btnMotos = new JButton("Motos");
+        JButton btnMotos = new JButton("node -vMotos");
         JButton btnCompras = new JButton(" Compras");
         JButton btnNuevaCompra = new JButton(" Registrar Compra");
         JButton btnSalir = new JButton(" Salir");
